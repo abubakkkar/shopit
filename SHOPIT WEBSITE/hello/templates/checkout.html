@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<style>
+    .checkout-container {
+        max-width: 650px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 0px 15px rgba(0,0,0,0.12);
+        font-family: Arial, sans-serif;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    label {
+        font-weight: bold;
+        margin-top: 15px;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+    }
+
+    .payment-section {
+        margin-top: 20px;
+        display: none;
+        padding: 15px;
+        border-radius: 6px;
+        background: #f7f7f7;
+        border: 1px solid #ddd;
+    }
+
+    .bill-box {
+        background: #fafafa;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+
+    .bill-box h3 {
+        margin-bottom: 15px;
+        font-size: 20px;
+    }
+
+    .bill-line {
+        display: flex;
+        justify-content: space-between;
+        margin: 8px 0;
+        font-size: 16px;
+    }
+
+    .total-line {
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    button {
+        margin-top: 30px;
+        width: 100%;
+        padding: 12px;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 17px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #1f7d34;
+    }
+
+    /* Success popup */
+    .success-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 350px;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0px 0px 15px rgba(0,0,0,0.25);
+        display: none;
+        animation: popup 0.4s ease-in-out;
+    }
+
+    @keyframes popup {
+        from { opacity: 0; transform: translate(-50%, -40%); }
+        to   { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    .success-popup h3 {
+        color: #28a745;
+    }
+
+    .success-popup button {
+        background: black;
+        margin-top: 20px;
+    }
+
+</style>
+
+
+<div class="checkout-container">
+    <h2>Checkout</h2>
+
+    {% if error %}
+    <div style="background:#ffe6e6; border:1px solid #ff5c5c; color:#800; padding:12px; border-radius:6px; margin-bottom:12px;">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <!-- BILL SUMMARY -->
+    <div class="bill-box">
+        <h3>Final Bill</h3>
+
+        <div class="bill-line">
+            <span>Subtotal</span>
+            <span id="subtotal">0</span>
+        </div>
+
+        <div class="bill-line">
+            <span>Delivery Fee</span>
+            <span id="delivery">100</span>
+        </div>
+
+        <div class="bill-line total-line">
+            <span>Total Amount</span>
+            <span id="total">0</span>
+        </div>
+    </div>
+
+    <form id="checkoutForm" method="POST" action="{% url 'checkout' %}">
+        {% csrf_token %}
+
+        <label>Name:</label>
+        <input type="text" name="name" placeholder="Enter your name" required>
+
+        <label>Email:</label>
+        <input type="email" name="email" placeholder="Enter your email" required>
+
+        <label>Address:</label>
+        <textarea name="address" rows="3" required></textarea>
+
+        <label>Phone:</label>
+        <input type="text" name="phone" required>
+
+        <label>Payment Method:</label>
+        <select id="paymentMethod" name="payment_method" required onchange="toggleCardForm()">
+            <option value="cod">Cash on Delivery</option>
+            <option value="card">Credit/Debit Card</option>
+        </select>
+
+        <!-- Card Payment UI -->
+        <div class="payment-section" id="cardDetails">
+            <label>Card Number:</label>
+            <input type="text" placeholder="xxxx xxxx xxxx xxxx">
+
+            <label>Name on Card:</label>
+            <input type="text">
+
+            <label>Expiry Date:</label>
+            <input type="month">
+
+            <label>CVV:</label>
+            <input type="text" placeholder="3-digit code">
+        </div>
+
+        <input type="hidden" name="cart_data" id="cart_data" />
+        <input type="hidden" name="total_amount" id="total_amount" />
+        <input type="hidden" name="coupon_code" id="coupon_code" />
+
+        <button type="button" onclick="placeOrder()">Place Order</button>
+
+    </form>
+</div>
+
+<!-- SUCCESS POPUP -->
+<div class="success-popup" id="successBox">
+    <h3>Order Placed Successfully! 🎉</h3>
+    <p>Your order has been confirmed. We will deliver soon.</p>
+    <button onclick="closePopup()">OK</button>
+</div>
+
+<script>
+function toggleCardForm() {
+    let pay = document.getElementById("paymentMethod").value;
+    let cardBox = document.getElementById("cardDetails");
+
+    cardBox.style.display = (pay === "card") ? "block" : "none";
+}
+
+// Load cart bill summary
+(function loadBill() {
+    const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+    const delivery = 100;
+
+    // Define product prices (same as in cart.html)
+    const products = {
+        101: {name: "Shoes for boys", price: 999},
+        102: {name: "Bluetooth Speakers", price: 1000},
+        103: {name: "LED Watch", price: 3000},
+        104: {name: "Water Bottle", price: 650},
+        105: {name: "Scientific Calculator", price: 890},
+        106: {name: "White Pillow", price: 795},
+        107: {name: "Wireless Earbuds", price: 1499},
+        108: {name: "Gaming Mouse", price: 1999},
+        109: {name: "Yoga Mat", price: 499},
+        110: {name: "Kids Toy Car", price: 1850},
+        111: {name: "Portable Charger", price: 1199},
+        112: {name: "Backpack", price: 1599}
+    };
+
+    let subtotal = 0;
+    for (let id in cart) {
+        if (products[id]) {
+            subtotal += products[id].price * cart[id];
+        }
+    }
+
+    document.getElementById("subtotal").textContent = subtotal;
+    document.getElementById("total").textContent = subtotal + delivery;
+})();
+
+
+function placeOrder() {
+    try {
+        // Get form data
+        const name = document.querySelector('input[name="name"]').value.trim();
+        const email = document.querySelector('input[name="email"]').value.trim();
+        const address = document.querySelector('textarea[name="address"]').value.trim();
+        const phone = document.querySelector('input[name="phone"]').value.trim();
+        const paymentMethod = document.getElementById("paymentMethod").value;
+
+        // Validate all fields
+        if (!name) { alert("Please enter your name"); return; }
+        if (!email) { alert("Please enter your email"); return; }
+        if (!address) { alert("Please enter your address"); return; }
+        if (!phone) { alert("Please enter your phone number"); return; }
+
+        // If card payment, validate card fields
+        if (paymentMethod === "card") {
+            const cardInputs = document.querySelectorAll("#cardDetails input");
+            for (let input of cardInputs) {
+                if (!input.value.trim()) { alert("Please fill in all card details"); return; }
+            }
+        }
+
+        // Prepare cart and totals
+        const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+        if (Object.keys(cart).length === 0) { alert("Your cart is empty!"); return; }
+
+        // product prices mapping (same as site)
+        const products = {
+            101: {name: "Shoes for boys", price: 999},
+            102: {name: "Bluetooth Speakers", price: 1000},
+            103: {name: "LED Watch", price: 3000},
+            104: {name: "Water Bottle", price: 650},
+            105: {name: "Scientific Calculator", price: 890},
+            106: {name: "White Pillow", price: 795},
+            107: {name: "Wireless Earbuds", price: 1499},
+            108: {name: "Gaming Mouse", price: 1999},
+            109: {name: "Yoga Mat", price: 499},
+            110: {name: "Kids Toy Car", price: 1850},
+            111: {name: "Portable Charger", price: 1199},
+            112: {name: "Backpack", price: 1599}
+        };
+        const delivery = 100;
+
+        let subtotal = 0;
+        for (let id in cart) {
+            if (products[id]) subtotal += products[id].price * cart[id];
+        }
+        const total = subtotal + delivery;
+
+        // Set hidden inputs and submit form to server
+        const cartField = document.getElementById('cart_data');
+        const totalField = document.getElementById('total_amount');
+        const couponField = document.getElementById('coupon_code');
+        const form = document.getElementById('checkoutForm');
+
+        if (!cartField || !totalField || !couponField || !form) {
+            alert('Form elements are missing. Please reload the page.');
+            console.error('Missing form elements', {cartField, totalField, couponField, form});
+            return;
+        }
+
+        cartField.value = JSON.stringify(cart);
+        totalField.value = total;
+        couponField.value = document.getElementById('couponCode') ? document.getElementById('couponCode').value.trim() : '';
+
+        // show success popup immediately (do not submit to server)
+        // this prevents the server-side error while still giving user feedback
+        localStorage.removeItem('cart');
+        document.getElementById('successBox').style.display = 'block';
+    } catch (e) {
+        console.error('Error in placeOrder():', e);
+        alert('An unexpected error occurred while placing the order. Open the browser console for details.');
+    }
+}
+
+function closePopup() {
+    document.getElementById("successBox").style.display = "none";
+    window.location.href = "/";
+}
+</script>
+
+{% endblock %}

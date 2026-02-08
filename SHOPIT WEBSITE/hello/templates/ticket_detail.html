@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Ticket #{{ ticket.id }} - ShopIt{% endblock %}
+
+{% block body %}
+<div style="max-width: 800px; margin: 40px auto; padding: 20px;">
+    <h2>Support Ticket #{{ ticket.id }}</h2>
+
+    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <p><strong>Subject:</strong> {{ ticket.subject }}</p>
+        <p><strong>Status:</strong> 
+            <span style="padding: 5px 10px; border-radius: 20px; 
+                {% if ticket.status == 'resolved' %}background: #d4edda; color: #155724;
+                {% elif ticket.status == 'in_progress' %}background: #cfe2ff; color: #084298;
+                {% else %}background: #fff3cd; color: #856404;{% endif %}">
+                {{ ticket.get_status_display }}
+            </span>
+        </p>
+        <p><strong>Created:</strong> {{ ticket.created_at|date:"d M Y H:i" }}</p>
+    </div>
+
+    <!-- Messages -->
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px; max-height: 400px; overflow-y: auto;">
+        {% for msg in messages %}
+        <div style="margin-bottom: 15px; padding: 15px; background: white; border-left: 4px solid {% if msg.user.id == user.id %}#007bff{% else %}#28a745{% endif %}; border-radius: 5px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <strong>{{ msg.user.username }}</strong>
+                <small style="color: #999;">{{ msg.created_at|date:"d M Y H:i" }}</small>
+            </div>
+            <p style="color: #333; margin: 0;">{{ msg.message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Reply Form -->
+    {% if ticket.status != 'resolved' %}
+    <form method="POST" style="border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+        {% csrf_token %}
+        <div style="margin-bottom: 15px;">
+            <label for="message">Your Reply:</label>
+            <textarea name="message" rows="4" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+        </div>
+        <button type="submit" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Send Reply</button>
+    </form>
+    {% else %}
+    <div style="background: #d4edda; padding: 15px; border-radius: 8px; color: #155724;">
+        <strong>This ticket has been resolved.</strong>
+    </div>
+    {% endif %}
+
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="{% url 'dashboard' %}" style="padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">← Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

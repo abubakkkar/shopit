@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Register - ShopIt{% endblock %}
+
+{% block body %}
+<div style="max-width: 400px; margin: 50px auto; padding: 30px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; margin-bottom: 30px;">Create Account</h2>
+
+    {% if error %}
+    <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 15px;">
+            <label for="username" style="display: block; margin-bottom: 5px; font-weight: bold;">Username:</label>
+            <input type="text" id="username" name="username" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="email" style="display: block; margin-bottom: 5px; font-weight: bold;">Email:</label>
+            <input type="email" id="email" name="email" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="password" style="display: block; margin-bottom: 5px; font-weight: bold;">Password:</label>
+            <input type="password" id="password" name="password" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="confirm_password" style="display: block; margin-bottom: 5px; font-weight: bold;">Confirm Password:</label>
+            <input type="password" id="confirm_password" name="confirm_password" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+        </div>
+
+        <button type="submit" style="width: 100%; padding: 10px; background: #28a745; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer;">Register</button>
+    </form>
+
+    <p style="text-align: center; margin-top: 15px;">Already have an account? <a href="{% url 'login' %}" style="color: #007bff; text-decoration: none;">Login here</a></p>
+</div>
+{% endblock %}

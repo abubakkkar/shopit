@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+
+{% block body %}
+
+<style>
+    /* Product Grid */
+    .product-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .product {
+        background: #fff;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: 0.3s ease;
+    }
+
+    .product:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .product img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .product h3 {
+        font-size: 1.1rem;
+        margin: 10px 0 5px;
+    }
+
+    .product p {
+        color: #444;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .add-to-cart {
+        padding: 10px 15px;
+        background: #ff9800;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .add-to-cart:hover {
+        background: #e68a00;
+    }
+</style>
+
+<section class="product-gallery">
+
+    <div class="product">
+        <img src="https://www.skechers.com/dw/image/v2/BDCN_PRD/on/demandware.static/-/Library-Sites-SkechersSharedLibrary/default/dw43b90dff/images/2025-Images/Q3/Mens_FW25_CasualSneakers.jpg?sw=356" alt="Shoes for boys">
+        <h3>Shoes for boys</h3>
+        <p>Rs. 999</p>
+        <button class="add-to-cart" onclick="addToCart(101)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkzm330_QXVLpQJnT6jKW3ixSYYI9Vka9t6Q&s" alt="Bluetooth Speakers">
+        <h3>Bluetooth Speakers</h3>
+        <p>Rs. 1000</p>
+        <button class="add-to-cart" onclick="addToCart(102)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+        <img src="https://img.drz.lazcdn.com/static/pk/p/ae7da9120983d33640a0512e66d427c5.jpg_720x720q80.jpg" alt="LED Watch">
+        <h3>LED Watch</h3>
+        <p>Rs. 3000</p>
+        <button class="add-to-cart" onclick="addToCart(103)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+        <img src="https://www.toycompany.pk/cdn/shop/files/463592642_1244842970050101_317711112805384845_n_1280x.jpg?v=1756717107"
+             alt="Water Bottle">
+        <h3>Water Bottle</h3>
+        <p>Rs. 650</p>
+        <button class="add-to-cart" onclick="addToCart(104)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX_xEQAZ6dn1o3VrPIADcmckuAqrXZViT5bA&s"
+             alt="Scientific Calculator">
+        <h3>Scientific Calculator</h3>
+        <p>Rs. 890</p>
+        <button class="add-to-cart" onclick="addToCart(105)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+        <img src="https://www.diamondfoam.com/media/catalog/product/cache/7bfa6a652705a0e1893b46719dfbaa59/d/v/dv_micro_1_1_.jpg"
+             alt="White Pillow">
+        <h3>White Pillow</h3>
+        <p>Rs. 795</p>
+        <button class="add-to-cart" onclick="addToCart(106)">Add to Cart</button>
+    </div>
+
+    <!-- New Products -->
+    <div class="product">
+        <img src="https://appleman.pk/cdn/shop/products/AirPodsPro2ndGeneration-1_500x_4e342ff6-0142-4e2f-90c6-d76c0b53b9ea.webp?v=1667898385&width=1445" alt="Apple AirPods Pro">
+        <h3>Apple AirPods Pro</h3>
+        <p>Rs. 4,999</p>
+        <button class="add-to-cart" onclick="addToCart(107)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSK99Lt1fvYmzOIk6SqX8biiO40hxXSPF8naw&s" alt="Gaming Mouse">
+        <h3>Gaming Mouse</h3>
+        <p>Rs. 2,200</p>
+        <button class="add-to-cart" onclick="addToCart(108)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYsmy3-qN6cU2I9E8aSmy7btDUXwEg5GDRLw&s" alt="Samsung Power Bank">
+        <h3>Samsung Power Bank</h3>
+        <p>Rs. 3,500</p>
+        <button class="add-to-cart" onclick="addToCart(109)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+        <img src="https://m.media-amazon.com/images/I/41m23r3rS5S._SL500_.jpg" alt="Kids Toy Car">
+        <h3>Kids Toy Car</h3>
+        <p>Rs. 1,850</p>
+        <button class="add-to-cart" onclick="addToCart(110)">Add to Cart</button>
+    </div>
+
+    
+
+</section>
+
+{% endblock %}

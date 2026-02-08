@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Wishlist - ShopIt{% endblock %}
+
+{% block body %}
+<div style="max-width: 1200px; margin: 40px auto; padding: 20px;">
+    <h2>My Wishlist</h2>
+
+    {% if wishlist_products %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 30px;">
+        {% for product in wishlist_products %}
+        <div style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; text-align: center; transition: transform 0.3s;">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100%; height: 200px; object-fit: cover;">
+            {% else %}
+            <div style="width: 100%; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">No Image</div>
+            {% endif %}
+            <div style="padding: 15px;">
+                <h4 style="margin: 10px 0;">{{ product.name }}</h4>
+                <p style="color: #666; font-size: 14px;">{{ product.description|truncatewords:10 }}</p>
+                <p style="font-size: 18px; color: #28a745; font-weight: bold; margin: 10px 0;">Rs. {{ product.price }}</p>
+                <button onclick="addToCart({{ product.id }})" style="padding: 8px 15px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%;">Add to Cart</button>
+                <button onclick="removeFromWishlist({{ product.id }})" style="padding: 8px 15px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 8px;">Remove</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="text-align: center; margin-top: 40px; font-size: 18px;">Your wishlist is empty. <a href="{% url 'products' %}" style="color: #007bff;">Browse products</a></p>
+    {% endif %}
+
+    <div style="margin-top: 30px;">
+        <a href="{% url 'dashboard' %}" style="padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">← Back to Dashboard</a>
+    </div>
+</div>
+
+<script src="{% static 'js/cart.js' %}"></script>
+{% endblock %}

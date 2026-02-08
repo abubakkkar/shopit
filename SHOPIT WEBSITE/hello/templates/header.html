@@ -1,0 +1,35 @@
+<header>
+    <div class="site-header" role="banner">
+        <div class="logo">
+            <a href="{% url 'home' %}">ShopIt</a>
+        </div>
+
+        <button id="navToggle" class="nav-toggle" aria-label="Toggle navigation">☰</button>
+
+        <nav id="mainNav" class="main-nav" role="navigation">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'products' %}">Products</a>
+            <a href="{% url 'seller' %}">Be a Seller</a>
+            <a href="{% url 'services' %}">Shipping Policy</a>
+            <a href="{% url 'contact' %}">Contact</a>
+        </nav>
+
+        <div class="header-actions">
+            <a href="{% url 'cart' %}" class="cart-link">🛒 <span id="cart-count">0</span></a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="user-link">Hi {{ user.username }}</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="user-link">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const toggle = document.getElementById('navToggle');
+    const nav = document.getElementById('mainNav');
+    if (toggle && nav) toggle.addEventListener('click', function(){ nav.classList.toggle('open'); });
+});
+</script>

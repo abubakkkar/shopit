@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}About{% endblock %}
+
+{% block body %}
+<style>
+  .about-hero{
+    background: #222; color: #fff; padding: 40px 20px; text-align:center;
+  }
+  .about-hero h1{ margin:0; font-size:36px }
+  .about-hero .subheading{ color:#ddd; margin-top:8px }
+  .about-container{ max-width:900px; margin:40px auto; padding:30px; background:#fff; border-radius:8px }
+  .mission, .vision{ background:#fff3e0; padding:18px; border-radius:6px; margin-bottom:20px }
+  .mission h2, .vision h2{ margin-top:0 }
+</style>
+
+<header class="about-hero">
+  <h1>About Us</h1>
+  <div class="subheading">Learn more about our company, our mission, and our team.</div>
+</header>
+
+<div class="about-container">
+  <p>
+    Welcome to ShopIt — your friendly online store dedicated to bringing you the best products at unbeatable prices. Since our founding, we have been committed to delivering quality, convenience, and exceptional customer service.
+  </p>
+
+  <div class="mission">
+    <h2>Our Mission</h2>
+    <p>To empower shoppers by providing a seamless online shopping experience filled with quality products, great deals, and fast delivery.</p>
+  </div>
+
+  <div class="vision">
+    <h2>Our Vision</h2>
+    <p>To be the most trusted and innovative e-commerce platform that connects people with products they love.</p>
+  </div>
+
+  <p>At ShopIt, we believe shopping should be simple and enjoyable. Whether you are browsing for the latest gadgets, fashion, or home essentials, our goal is to offer a curated collection that meets your needs and exceeds your expectations.</p>
+
+  <p>Thank you for choosing ShopIt. We look forward to serving you!</p>
+</div>
+
+{% endblock %}

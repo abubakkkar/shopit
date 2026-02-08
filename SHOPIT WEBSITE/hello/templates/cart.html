@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart{% endblock %}
+
+{% block body %}
+<h2 style="margin-top:20px;">Your Shopping Cart</h2>
+
+<!-- Cart Table -->
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse: collapse; margin-top: 20px;">
+    <thead>
+        <tr style="background:#f0f0f0;">
+            <th>Product</th>
+            <th>Price (Rs)</th>
+            <th>Quantity</th>
+            <th>Subtotal (Rs)</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="cart-items">
+        <!-- JS will insert rows here -->
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" align="right"><strong>Delivery Fee:</strong></td>
+            <td id="delivery-fee">100</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td colspan="3" align="right"><strong>Total:</strong></td>
+            <td id="cart-total">0</td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
+
+<div style="margin-top:20px;">
+    <a href="{% url 'home' %}" style="padding:10px 20px; background:#555; color:white; text-decoration:none; border-radius:5px;">Continue Shopping</a>
+
+    <!-- NEW: Redirect to Django Checkout Page -->
+    <button onclick="goToCheckout(); return false;" 
+            style="padding:10px 20px; background:green; color:white; border:none; cursor:pointer; border-radius:5px; font-size:16px; font-weight:bold;">
+        Checkout
+    </button>
+</div>
+
+<script>
+/* -----------------------------
+   PRODUCT DATA
+------------------------------*/
+const products = {
+    101: {name: "Shoes for boys", price: 999},
+    102: {name: "Bluetooth Speakers", price: 1000},
+    103: {name: "LED Watch", price: 3000},
+    104: {name: "Water Bottle", price: 650},
+    105: {name: "Scientific Calculator", price: 890},
+    106: {name: "White Pillow", price: 795},
+    107: {name: "Wireless Earbuds", price: 1499},
+    108: {name: "Gaming Mouse", price: 1999},
+    109: {name: "Yoga Mat", price: 499},
+    110: {name: "Kids Toy Car", price: 1850},
+    111: {name: "Portable Charger", price: 1199},
+    112: {name: "Backpack", price: 1599}
+};
+
+const deliveryFee = 100;
+
+/* -----------------------------
+   LOAD CART ITEMS
+------------------------------*/
+function loadCart() {
+    const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+    const tbody = document.getElementById("cart-items");
+    tbody.innerHTML = "";
+    let subtotalTotal = 0;
+
+    for (let id in cart) {
+        if (!products[id]) continue;
+
+        const product = products[id];
+        const qty = cart[id];
+        const subtotal = product.price * qty;
+        subtotalTotal += subtotal;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${product.name}</td>
+            <td>${product.price}</td>
+            <td>
+                <button onclick="updateQuantity(${id}, -1)">-</button>
+                ${qty}
+                <button onclick="updateQuantity(${id}, 1)">+</button>
+            </td>
+            <td>${subtotal}</td>
+            <td><button onclick="removeProduct(${id})" style="background:red;color:white;border:none;padding:5px 10px;cursor:pointer;">Remove</button></td>
+        `;
+        tbody.appendChild(row);
+    }
+
+    document.getElementById("cart-total").textContent = subtotalTotal + deliveryFee;
+    document.getElementById("delivery-fee").textContent = deliveryFee;
+}
+
+/* -----------------------------
+   UPDATE QUANTITY
+------------------------------*/
+function updateQuantity(productId, change) {
+    const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+
+    if (cart[productId]) {
+        cart[productId] += change;
+        if (cart[productId] <= 0) delete cart[productId];
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        loadCart();
+    }
+}
+
+/* -----------------------------
+   REMOVE PRODUCT
+------------------------------*/
+function removeProduct(productId) {
+    const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+
+    if (cart[productId]) {
+        delete cart[productId];
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        loadCart();
+    }
+}
+
+/* -----------------------------
+   NEW: GO TO CHECKOUT PAGE
+------------------------------*/
+function goToCheckout() {
+    try {
+        const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+
+        if (Object.keys(cart).length === 0) {
+            alert("Your cart is empty!");
+            return false;
+        }
+
+        // Save total so checkout page can read it
+        const subtotal = Object.keys(cart).reduce(
+            (sum, id) => sum + (products[id] ? products[id].price * cart[id] : 0),
+            0
+        );
+        const total = subtotal + deliveryFee;
+
+        localStorage.setItem("checkout_total", total);
+
+        // Redirect to Django checkout page
+        window.location.href = "/checkout/";
+        return false;
+    } catch (error) {
+        console.error("Checkout error:", error);
+        alert("An error occurred. Please try again.");
+        return false;
+    }
+}
+
+/* -----------------------------
+   INITIALIZE CART
+------------------------------*/
+loadCart();
+</script>
+
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Shipping Policy{% endblock %}
+
+{% block body %}
+<style>
+    .services-page-body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: transparent;
+        color: #333;
+        padding: 20px 0;
+    }
+    .services-page-body .container {
+        max-width: 900px;
+        margin: 30px auto;
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+    .services-page-body h1 { text-align: center; font-size: 2.4rem; color: #ff9800; margin-bottom: 20px; }
+    .services-page-body h2 { font-size: 1.25rem; color: #d56f00; margin-top: 20px; }
+    .services-page-body p, .services-page-body li { font-size: 1.02rem; line-height: 1.7; margin-bottom: 12px; }
+    .services-page-body ul { margin-left: 18px; }
+    .services-page-body .policy-section { margin-bottom: 22px; }
+    .services-page-body .policy-section img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 10px; margin: 12px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    @media (max-width: 600px) {
+        .services-page-body .container { margin: 20px 12px; padding: 24px; }
+        .services-page-body h1 { font-size: 1.8rem; }
+    }
+</style>
+
+<div class="services-page-body">
+  <div class="container">
+    <h1>Shopping Policy</h1>
+
+    <div class="policy-section">
+        <h2>Order Processing</h2>
+        <p>
+            All orders are processed within 24-48 hours. You will receive a confirmation email once your order has been successfully placed.
+        </p>
+        <img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=900&q=80" alt="Order Processing">
+    </div>
+
+    <div class="policy-section">
+        <h2>Shipping & Delivery</h2>
+        <ul>
+            <li>Standard shipping takes 3-7 business days.</li>
+            <li>Expedited shipping options are available at checkout.</li>
+            <li>Shipping costs are calculated based on weight and destination.</li>
+        </ul>
+        <img src="https://images.unsplash.com/photo-1522199710521-72d69614c702?auto=format&fit=crop&w=900&q=80" alt="Shipping">
+    </div>
+
+    <div class="policy-section">
+        <h2>Returns & Refunds</h2>
+        <ul>
+            <li>Products can be returned within 14 days of delivery.</li>
+            <li>Refunds are processed within 5-7 business days after receiving the returned product.</li>
+            <li>Items must be unused and in original packaging.</li>
+        </ul>
+       <img src="https://redstagfulfillment.b-cdn.net/wp-content/uploads/ecommerce-returns_header-1024x693.jpg" alt="Returns and Refunds">
+    </div>
+
+    <div class="policy-section">
+        <h2>Customer Support</h2>
+        <p>
+            Our support team is available 24/7 via email and chat. We are committed to resolving all issues quickly and efficiently to ensure a smooth shopping experience.
+        </p>
+        <img src="https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&w=900&q=80" alt="Customer Support">
+    </div>
+</div>
+
+{% endblock %}

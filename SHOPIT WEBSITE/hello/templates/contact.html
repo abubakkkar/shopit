@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Contact{% endblock %}
+
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contact Us | ShopIt</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            padding: 50px 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #ff9800;
+            margin-bottom: 25px;
+            font-size: 2.8rem;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        label {
+            font-weight: 600;
+        }
+        input, textarea {
+            padding: 12px 15px;
+            border: 1.5px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        input:focus, textarea:focus {
+            border-color: #ff9800;
+            outline: none;
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        button {
+            padding: 12px 28px;
+            background: #ff9800;
+            color: white;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #e68a00;
+        }
+        .contact-info {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .contact-info div {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .contact-info i {
+            font-style: normal;
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .map-container {
+            margin-top: 40px;
+        }
+        iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+            border-radius: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 10px;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid #ddd;
+            background: white;
+            margin-top: 50px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 30px 15px;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Contact Us</h1>
+
+    <form action="/contact" method="POST">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Your full name" required>
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="Your email" required>
+
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" name="subject" placeholder="Subject of your message" required>
+
+        <label for="message">Message</label>
+        <textarea id="message" name="message" placeholder="Write your message here..." required></textarea>
+
+        <button type="submit">Send Message</button>
+    </form>
+
+    <div class="contact-info">
+        <div><i>📞</i> Phone: 0300-0104403</div>
+        <div><i>📠</i> Fax: 042-1111111</div>
+        <div><i>📱</i> UAN: 111-222-000</div>
+        <div><i>🏢</i> Address: UET, Lahore, Pakistan</div>
+        <div><i>📧</i> Email: support@shopit.com</div>
+    </div>
+
+    <div class="map-container">
+        <!-- Google Maps Embed for UET Lahore -->
+        <iframe 
+<iframe
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d108701.87948332967!2d74.22178046577639!3d31.635664699450306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39191b273d6ed0c1%3A0x4dcac84ea2200944!2sUniversity%20of%20Engineering%20and%20Technology%20(UET)%2C%20Lahore!5e0!3m2!1sen!2s!4v1770357187583!5m2!1sen!2s"
+  width="600"
+  height="450"
+  style="border:0;"
+  allowfullscreen=""
+  loading="lazy"
+  referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
+    </div>
+</div>
+
+
+</body>
+</html>
+
+{% endblock %}
